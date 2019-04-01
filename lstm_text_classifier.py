@@ -25,7 +25,7 @@ def clean_str(string):
     # Every dataset is lower cased
     return string.strip().lower()
 
-data_train = pd.read_csv('data/labeledTrainData.tsv', sep='\t')
+data_train = pd.read_csv('data/labeledTrainData_sample.tsv', sep='\t') # download the full IMDB dataset here: https://www.kaggle.com/c/word2vec-nlp-tutorial/data
 
 # read text data to sequences
 texts = []
