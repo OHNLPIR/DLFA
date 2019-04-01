@@ -2,6 +2,9 @@
 # https://machinelearningmastery.com/sequence-classification-lstm-recurrent-neural-networks-python-keras/ and
 # https://richliao.github.io/supervised/classification/2016/12/26/textclassifier-RNN/
 
+# Tested on: Python=2.7, Anaconda 2018.12 OR Keras=2.2.4, TensorFlow=1.13.1
+
+
 import numpy as np
 import pandas as pd
 import re
@@ -25,7 +28,7 @@ def clean_str(string):
     # Every dataset is lower cased
     return string.strip().lower()
 
-data_train = pd.read_csv('data/labeledTrainData_sample.tsv', sep='\t') # download the full IMDB dataset here: https://www.kaggle.com/c/word2vec-nlp-tutorial/data
+data_train = pd.read_csv('data/labeledTrainData.tsv', sep='\t')
 
 # read text data to sequences
 texts = []
@@ -78,8 +81,8 @@ print y_test.sum(axis=0)
 
 # LSTM model.
 
-# The first layer is the Embedded layer that uses 32 length vectors to represent each word.
-embedding_vecor_length = 32
+# The first layer is the Embedded layer that uses 64 length vectors to represent each word.
+embedding_vecor_length = 64
 model = Sequential()
 model.add(Embedding(MAX_NB_WORDS, embedding_vecor_length, input_length=MAX_SEQUENCE_LENGTH))
 
@@ -94,14 +97,14 @@ model.add(Dense(2, activation='sigmoid'))
 from keras.utils.vis_utils import plot_model
 plot_model(model, to_file='model_plot.eps', show_shapes=True, show_layer_names=True)
 
-# Because it is a binary classification problem, log loss is used as the loss function.
+# Because it is a binary classification problem, categorical_crossentropy is used as the loss function.
 # The efficient ADAM optimization algorithm is used.
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
 
 # A large batch size of 64 reviews is used to space out weight updates.
 # The model is fit for 2 epochs because it quickly overfits the problem.
-model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=2, batch_size=64)
+model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=3, batch_size=64)
 
 # Final evaluation of the model
 scores = model.evaluate(x_test, y_test, verbose=0)
